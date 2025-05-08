@@ -1,0 +1,8 @@
+.idea
+/target
+.env
+.env.*
+!*.env.example
+.terraform/
+terraform.tfstate
+terraform.*
