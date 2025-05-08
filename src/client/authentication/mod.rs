@@ -43,11 +43,19 @@ impl<'de> serde::Deserialize<'de> for Tokens {
     {
         let value = serde_json::Value::deserialize(deserializer)?;
 
-        let access_token = value["access_token"].as_str().unwrap().to_string();
+        let access_token = value["access_token"]
+            .as_str()
+            .ok_or_else(|| serde::de::Error::custom("Invalid access token"))?
+            .to_string();
+        let refresh_token = value["refresh_token"]
+            .as_str()
+            .ok_or_else(|| serde::de::Error::custom("Invalid refresh token"))?
+            .to_string();
         let expires_at = Utc::now().add(chrono::Duration::seconds(
-            value["expires_in"].as_i64().unwrap(),
+            value["expires_in"]
+                .as_i64()
+                .ok_or_else(|| serde::de::Error::custom("Invalid expires_in value"))?,
         ));
-        let refresh_token = value["refresh_token"].as_str().unwrap().to_string();
 
         Ok(Self::new(access_token, expires_at, refresh_token))
     }
@@ -88,9 +96,9 @@ impl RingAuth {
 
     pub(crate) async fn login(
         &self,
-        username: &String,
-        password: &String,
-        system_id: &String,
+        username: &str,
+        password: &str,
+        system_id: &str,
     ) -> Result<Tokens, AuthenticationError> {
         let response = self
             .client
@@ -113,6 +121,11 @@ impl RingAuth {
 
         if response.status() == StatusCode::PRECONDITION_FAILED {
             return Err(AuthenticationError::MfaCodeRequired);
+        }
+
+        if response.status() != StatusCode::OK {
+            log::error!("Failed to login with status code: {}", response.status());
+            return Err(AuthenticationError::InvalidCredentials);
         }
 
         Ok(response.json::<Tokens>().await?)
@@ -194,6 +207,9 @@ impl Client {
             return Ok(Arc::clone(&replacement_tokens));
         }
 
-        Ok(Arc::clone(self.tokens.read().await.as_ref().unwrap()))
+        self.tokens.read().await.as_ref().map_or_else(
+            || Err(AuthenticationError::InvalidCredentials),
+            |current_tokens| Ok(Arc::clone(current_tokens)),
+        )
     }
 }
