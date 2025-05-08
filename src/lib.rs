@@ -9,7 +9,8 @@
 
 //! # Ring Client
 //!
-//! The Ring Client crate provides a client for interfacing [Ring](https://www.ring.com/) smart home accessories.
+//! The Ring Client crate provides a client for interfacing with [Ring](https://www.ring.com/)
+//! home security devices.
 //!
 //! ## Usage
 //! ```toml
