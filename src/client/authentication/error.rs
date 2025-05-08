@@ -5,6 +5,10 @@ use thiserror::Error;
 #[error(transparent)]
 #[non_exhaustive]
 pub enum AuthenticationError {
+    /// The credentials provided were invalid.
+    #[error("The credentials provided were invalid")]
+    InvalidCredentials,
+
     /// Ring presented a MFA (Two Factor Authentication) challenge which require
     /// an SMS code to be sent to the user, and provided to the API.
     ///
