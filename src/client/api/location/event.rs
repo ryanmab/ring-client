@@ -254,7 +254,6 @@ impl<'a> Listener<'a> {
                 }
                 Some(Err(error)) => {
                     log::error!("Error receiving event: {:?}", error);
-                    continue;
                 }
                 None => {
                     log::info!("Websocket stream closed, stopping listener");
