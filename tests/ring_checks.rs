@@ -1,7 +1,11 @@
 use std::sync::Arc;
 
 use dotenvy_macro::dotenv;
-use ring_client::{authentication::Credentials, location, Client, OperatingSystem};
+use ring_client::{
+    authentication::Credentials,
+    location::{self, Listener},
+    Client, OperatingSystem,
+};
 use tokio::{sync::Mutex, time::timeout};
 
 #[tokio::test]
@@ -48,19 +52,30 @@ async fn test_listening_for_events_in_location() {
     {
         let recieved_events = Arc::clone(&recieved_events);
 
-        let listener = location
-            .listen_for_events(move |event, _| {
-                let recieved_events = Arc::clone(&recieved_events);
-
-                async move {
-                    recieved_events.lock().await.push(event);
-                }
-            })
+        let mut listener = location
+            .get_listener()
             .await
             .expect("Should be able to listen for events");
 
         // Wait for a few seconds to receive events from Ring
-        let _ = timeout(std::time::Duration::from_secs(10), listener.join()).await;
+        let _ = timeout(
+            std::time::Duration::from_secs(30),
+            listener.listen(|event, _, _| async {
+                let recieved_events = Arc::clone(&recieved_events);
+
+                let mut received_events = recieved_events.lock().await;
+
+                received_events.push(event);
+
+                if received_events.len() >= 2 {
+                    // If we have received enough events, close the connection
+                    return false;
+                }
+
+                true
+            }),
+        )
+        .await;
     }
 
     let events = recieved_events.lock().await;

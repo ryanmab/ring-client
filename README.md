@@ -29,12 +29,12 @@ ring-client = "0.0.2"
 
 More in-depth examples can be found in documentation comments on the Client methods.
 
-## Listening for Events
+### Listening for Events
 
 Perhaps one of the most useful features of the crate is the ability to listen and respond to
 events which occur in a location in real-time.
 
-This is done using the [`crate::location::Location::listen_for_events`] method.
+This is done using the [`Listener::listen`] method.
 
 ```rust
 use ring_client::Client;
@@ -62,20 +62,68 @@ let location = locations
      .first()
      .expect("There should be at least one location");
 
-let listener = location.listen_for_events(|event, sink| async move {
-    // The sink can be used to send events to Ring.
+let listener = location.get_listener().await;
+
+// Listen for events in the location and react to them using the provided closure.
+listener.listen(|event, location, mut connection| async {
+    // Connection can be used to send commands to the Ring API.
     println!("New event: {:#?}", event);
+
+    // The connection argument can be used to send events back to Ring in
+    // response to the event.
 })
 .await
 .expect("Creating a listener should not fail");
 
-// Wait for the listener to finish.
-listener
-    .join()
-    .await
 ```
 
-## Listing Devices
+### Sending Events
+
+The [`Listener`] can also be used to send events to the Ring API, such as arming or disarming an alarm
+system.
+
+```rust
+use ring_client::Client;
+
+use ring_client::authentication::Credentials;
+use ring_client::OperatingSystem;
+
+let client = Client::new("Home Automation", "mock-system-id", OperatingSystem::Ios);
+
+// For berevity, a Refresh Token is being used here. However, the client can also
+// be authenticated using a username and password.
+//
+// See `Client::login` for more information.
+let refresh_token = Credentials::RefreshToken("".to_string());
+
+client.login(refresh_token)
+     .await
+     .expect("Logging in with a valid refresh token should not fail");
+
+let locations = client.get_locations()
+     .await
+     .expect("Getting locations should not fail");
+
+let location = locations
+     .first()
+     .expect("There should be at least one location");
+
+let listener = location.get_listener().await;
+
+location.get_listener()
+    .await
+    .send(
+        Event::new(
+            Message::DataUpdate(
+            json!({})
+            )
+        )
+    )
+    .await
+    .expect("Sending an event should not fail");
+```
+
+### Listing Devices
 
 ```rust
 use ring_client::Client;
