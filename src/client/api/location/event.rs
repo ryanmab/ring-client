@@ -259,7 +259,7 @@ impl<'a> Listener<'a> {
                     log::info!("Websocket stream closed, stopping listener");
                     break;
                 }
-            };
+            }
         }
     }
 
