@@ -1,11 +1,8 @@
 use std::sync::Arc;
 
 use dotenvy_macro::dotenv;
-use ring_client::{
-    authentication::Credentials
-    ,
-    Client, OperatingSystem,
-};
+use ring_client::location::Message;
+use ring_client::{authentication::Credentials, Client, OperatingSystem};
 use tokio::{sync::Mutex, time::timeout};
 
 #[tokio::test]
@@ -88,14 +85,13 @@ async fn test_listening_for_events_in_location() {
     assert!(
         events
             .iter()
-            .any(|e| matches!(e.message, crate::location::Message::SessionInfo(_))),
+            .any(|e| matches!(e.message, Message::SessionInfo(_))),
         "Expected at least one SessionInfo event"
     );
     assert!(
-        events.iter().any(|e| matches!(
-            e.message,
-            crate::location::Message::SubscriptionTopicsInfo(_)
-        )),
+        events
+            .iter()
+            .any(|e| matches!(e.message, Message::SubscriptionTopicsInfo(_))),
         "Expected at least one SubscriptionTopicsInfo event"
     );
 }
