@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
 use dotenvy_macro::dotenv;
-use ring_client::{authentication::Credentials, location, Client, OperatingSystem};
+use ring_client::location::Message;
+use ring_client::{authentication::Credentials, Client, OperatingSystem};
 use tokio::{sync::Mutex, time::timeout};
 
 #[tokio::test]
@@ -43,27 +44,38 @@ async fn test_listening_for_events_in_location() {
 
     let location = locations.first().expect("Expected at least one location");
 
-    let recieved_events = Arc::new(Mutex::new(Vec::new()));
+    let received_events = Arc::new(Mutex::new(Vec::new()));
 
     {
-        let recieved_events = Arc::clone(&recieved_events);
+        let received_events = Arc::clone(&received_events);
 
-        let listener = location
-            .listen_for_events(move |event, _| {
-                let recieved_events = Arc::clone(&recieved_events);
-
-                async move {
-                    recieved_events.lock().await.push(event);
-                }
-            })
+        let mut listener = location
+            .get_listener()
             .await
             .expect("Should be able to listen for events");
 
         // Wait for a few seconds to receive events from Ring
-        let _ = timeout(std::time::Duration::from_secs(10), listener.join()).await;
+        let _ = timeout(
+            std::time::Duration::from_secs(30),
+            listener.listen(|event, _, _| async {
+                let received_events = Arc::clone(&received_events);
+
+                let mut received_events = received_events.lock().await;
+
+                received_events.push(event);
+
+                if received_events.len() >= 2 {
+                    // If we have received enough events, close the connection
+                    return false;
+                }
+
+                true
+            }),
+        )
+        .await;
     }
 
-    let events = recieved_events.lock().await;
+    let events = received_events.lock().await;
     assert!(
         events.len() >= 2,
         "Expected at least two events to be received"
@@ -73,14 +85,13 @@ async fn test_listening_for_events_in_location() {
     assert!(
         events
             .iter()
-            .any(|e| matches!(e.message, crate::location::Message::SessionInfo(_))),
+            .any(|e| matches!(e.message, Message::SessionInfo(_))),
         "Expected at least one SessionInfo event"
     );
     assert!(
-        events.iter().any(|e| matches!(
-            e.message,
-            crate::location::Message::SubscriptionTopicsInfo(_)
-        )),
+        events
+            .iter()
+            .any(|e| matches!(e.message, Message::SubscriptionTopicsInfo(_))),
         "Expected at least one SubscriptionTopicsInfo event"
     );
 }

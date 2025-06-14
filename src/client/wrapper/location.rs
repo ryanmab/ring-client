@@ -16,7 +16,7 @@ impl Client {
     /// # tokio_test::block_on(async {
     /// let client = Client::new("Home Automation", "mock-system-id", OperatingSystem::Ios);
     ///
-    /// // For berevity, a Refresh Token is being used here. However, the client can also
+    /// // For brevity, a Refresh Token is being used here. However, the client can also
     /// // be authenticated using a username and password.
     /// //
     /// // See `Client::login` for more information.
