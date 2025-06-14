@@ -63,7 +63,9 @@
 //!      .first()
 //!      .expect("There should be at least one location");
 //!
-//! let listener = location.get_listener().await;
+//! let mut listener = location.get_listener()
+//!      .await
+//!      .expect("Creating a listener should not fail");
 //!
 //! // Listen for events in the location and react to them using the provided closure.
 //! listener.listen(|event, location, mut connection| async {
@@ -85,15 +87,17 @@
 //! system.
 //!
 //! ```no_run
+//! use serde_json::json;
 //! use ring_client::Client;
 //!
 //! use ring_client::authentication::Credentials;
+//! use ring_client::location::{Event, Message};
 //! use ring_client::OperatingSystem;
 //!
 //! # tokio_test::block_on(async {
 //! let client = Client::new("Home Automation", "mock-system-id", OperatingSystem::Ios);
 //!
-//! // For berevity, a Refresh Token is being used here. However, the client can also
+//! // For brevity, a Refresh Token is being used here. However, the client can also
 //! // be authenticated using a username and password.
 //! //
 //! // See `Client::login` for more information.
@@ -115,10 +119,11 @@
 //!
 //! location.get_listener()
 //!     .await
+//!     .expect("Creating a listener should not fail")
 //!     .send(
 //!         Event::new(
 //!             Message::DataUpdate(
-//!             json!({})
+//!                 json!({})
 //!             )
 //!         )
 //!     )
