@@ -68,15 +68,18 @@
 //!      .expect("Creating a listener should not fail");
 //!
 //! // Listen for events in the location and react to them using the provided closure.
-//! listener.listen(|event, location, mut connection| async {
+//! listener.listen(|event, _, _| async move {
 //!     // Connection can be used to send commands to the Ring API.
 //!     println!("New event: {:#?}", event);
 //!
 //!     // The connection argument can be used to send events back to Ring in
 //!     // response to the event.
+//!
+//!     // Return true or false to indicate whether the listener should continue listening, or
+//!     // whether the promise should be resolved.
+//!     true
 //! })
-//! .await
-//! .expect("Creating a listener should not fail");
+//! .await;
 //!
 //! # });
 //!```
@@ -115,16 +118,12 @@
 //!      .first()
 //!      .expect("There should be at least one location");
 //!
-//! let listener = location.get_listener().await;
-//!
 //! location.get_listener()
 //!     .await
 //!     .expect("Creating a listener should not fail")
 //!     .send(
 //!         Event::new(
-//!             Message::DataUpdate(
-//!                 json!({})
-//!             )
+//!             Message::DataUpdate(json!({}))
 //!         )
 //!     )
 //!     .await

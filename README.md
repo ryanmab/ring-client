@@ -13,7 +13,6 @@ The Ring Client crate provides a client for interfacing with [Ring](https://www.
 home security devices.
 
 ## Usage
-
 ```toml
 [dependencies]
 ring-client = "0.0.2"
@@ -68,15 +67,18 @@ let mut listener = location.get_listener()
      .expect("Creating a listener should not fail");
 
 // Listen for events in the location and react to them using the provided closure.
-listener.listen(|event, location, mut connection| async {
+listener.listen(|event, _, _| async move {
     // Connection can be used to send commands to the Ring API.
     println!("New event: {:#?}", event);
 
     // The connection argument can be used to send events back to Ring in
     // response to the event.
+
+    // Return true or false to indicate whether the listener should continue listening, or
+    // whether the promise should be resolved.
+    true
 })
-.await
-.expect("Creating a listener should not fail");
+.await;
 
 ```
 
@@ -113,16 +115,12 @@ let location = locations
      .first()
      .expect("There should be at least one location");
 
-let listener = location.get_listener().await;
-
 location.get_listener()
     .await
     .expect("Creating a listener should not fail")
     .send(
         Event::new(
-            Message::DataUpdate(
-                json!({})
-            )
+            Message::DataUpdate(json!({}))
         )
     )
     .await
@@ -162,7 +160,6 @@ There are _tons_ of features which could be added to the crate. If you'd like to
 feel free to open an issue or a pull request.
 
 Examples of features which could be added:
-
 1. Better parity between the Ring API and the structs.
 2. Support for streaming video from Ring cameras and doorbells.
 
@@ -172,15 +169,11 @@ Many of the tests require a valid Ring account before they can be run, which can
 via a Refresh Token being set in the `.env` file.
 
 The `.env` file can be created by using `.env.example` as a template:
-
 ```sh
 cp .env.example .env
 ```
-
 #### Running tests
-
 The tests can be run with:
-
 ```sh
 cargo test
 ```
