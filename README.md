@@ -15,7 +15,7 @@ home security devices.
 ## Usage
 ```toml
 [dependencies]
-ring-client = "0.0.2"
+ring-client = "0.1.0"
 ```
 
 ## Capabilities
