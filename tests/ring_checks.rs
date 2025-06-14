@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use dotenvy_macro::dotenv;
 use ring_client::{
-    authentication::Credentials,
-    location::{self, Listener},
+    authentication::Credentials
+    ,
     Client, OperatingSystem,
 };
 use tokio::{sync::Mutex, time::timeout};
@@ -47,10 +47,10 @@ async fn test_listening_for_events_in_location() {
 
     let location = locations.first().expect("Expected at least one location");
 
-    let recieved_events = Arc::new(Mutex::new(Vec::new()));
+    let received_events = Arc::new(Mutex::new(Vec::new()));
 
     {
-        let recieved_events = Arc::clone(&recieved_events);
+        let received_events = Arc::clone(&received_events);
 
         let mut listener = location
             .get_listener()
@@ -61,9 +61,9 @@ async fn test_listening_for_events_in_location() {
         let _ = timeout(
             std::time::Duration::from_secs(30),
             listener.listen(|event, _, _| async {
-                let recieved_events = Arc::clone(&recieved_events);
+                let received_events = Arc::clone(&received_events);
 
-                let mut received_events = recieved_events.lock().await;
+                let mut received_events = received_events.lock().await;
 
                 received_events.push(event);
 
@@ -78,7 +78,7 @@ async fn test_listening_for_events_in_location() {
         .await;
     }
 
-    let events = recieved_events.lock().await;
+    let events = received_events.lock().await;
     assert!(
         events.len() >= 2,
         "Expected at least two events to be received"

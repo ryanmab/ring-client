@@ -13,6 +13,7 @@ The Ring Client crate provides a client for interfacing with [Ring](https://www.
 home security devices.
 
 ## Usage
+
 ```toml
 [dependencies]
 ring-client = "0.0.2"
@@ -44,7 +45,7 @@ use ring_client::OperatingSystem;
 
 let client = Client::new("Home Automation", "mock-system-id", OperatingSystem::Ios);
 
-// For berevity, a Refresh Token is being used here. However, the client can also
+// For brevity, a Refresh Token is being used here. However, the client can also
 // be authenticated using a username and password.
 //
 // See `Client::login` for more information.
@@ -138,7 +139,7 @@ use ring_client::OperatingSystem;
 
 let client = Client::new("Home Automation", "mock-system-id", OperatingSystem::Ios);
 
-// For berevity, a Refresh Token is being used here. However, the client can also
+// For brevity, a Refresh Token is being used here. However, the client can also
 // be authenticated using a username and password.
 //
 // See `Client::login` for more information.
@@ -161,6 +162,7 @@ There are _tons_ of features which could be added to the crate. If you'd like to
 feel free to open an issue or a pull request.
 
 Examples of features which could be added:
+
 1. Better parity between the Ring API and the structs.
 2. Support for streaming video from Ring cameras and doorbells.
 
@@ -170,11 +172,15 @@ Many of the tests require a valid Ring account before they can be run, which can
 via a Refresh Token being set in the `.env` file.
 
 The `.env` file can be created by using `.env.example` as a template:
+
 ```sh
 cp .env.example .env
 ```
+
 #### Running tests
+
 The tests can be run with:
+
 ```sh
 cargo test
 ```
