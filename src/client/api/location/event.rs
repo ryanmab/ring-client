@@ -209,7 +209,7 @@ impl<'a> Listener<'a> {
     ///      .expect("Creating a listener should not fail");
     ///
     /// // Listen for events in the location and react to them using the provided closure.
-    /// listener.listen(|event, location, mut connection| async move {
+    /// listener.listen::<_, _, ()>(|event, location, mut connection| async move {
     ///     // Connection can be used to send commands to the Ring API.
     ///     println!("New event: {:#?}", event);
     ///
@@ -217,17 +217,24 @@ impl<'a> Listener<'a> {
     ///     // response to the event.
     ///
     ///     // Return true or false to indicate whether the listener should continue listening
-    ///     true
+    ///     Ok(true)
     /// })
     /// .await;
     ///
     /// # });
     ///```
-    pub async fn listen<EventHandler, EventHandlerFut>(&'a mut self, on_event: EventHandler)
+    ///
+    /// # Errors
+    ///
+    /// Returns the error from the event handler if it returns an error when called.
+    pub async fn listen<EventHandler, EventHandlerFut, E>(
+        &'a mut self,
+        on_event: EventHandler,
+    ) -> Result<(), E>
     where
         EventHandler:
             Fn(Event, &'a Location<'a>, Arc<Mutex<&'a mut Connection>>) -> EventHandlerFut,
-        EventHandlerFut: Future<Output = bool>,
+        EventHandlerFut: Future<Output = Result<bool, E>>,
     {
         let connection = Arc::new(Mutex::new(&mut self.connection));
 
@@ -245,7 +252,7 @@ impl<'a> Listener<'a> {
 
                     log::debug!("Received event: {:?}", event);
 
-                    let outcome = on_event(event, self.location, Arc::clone(&connection)).await;
+                    let outcome = on_event(event, self.location, Arc::clone(&connection)).await?;
 
                     if !outcome {
                         log::debug!("Event handler returned false, stopping listener");
@@ -261,6 +268,8 @@ impl<'a> Listener<'a> {
                 }
             }
         }
+
+        Ok(())
     }
 
     /// Send an event to Ring.

@@ -34,7 +34,7 @@
 //! Perhaps one of the most useful features of the crate is the ability to listen and respond to
 //! events which occur in a location in real-time.
 //!
-//! This is done using the [`Listener::listen`] method.
+//! This is done using the [`location::Listener`] method.
 //!
 //! ```no_run
 //! use ring_client::Client;
@@ -68,7 +68,7 @@
 //!      .expect("Creating a listener should not fail");
 //!
 //! // Listen for events in the location and react to them using the provided closure.
-//! listener.listen(|event, _, _| async move {
+//! let result = listener.listen::<_, _, ()>(|event, _, _| async move {
 //!     // Connection can be used to send commands to the Ring API.
 //!     println!("New event: {:#?}", event);
 //!
@@ -77,16 +77,15 @@
 //!
 //!     // Return true or false to indicate whether the listener should continue listening, or
 //!     // whether the promise should be resolved.
-//!     true
+//!     Ok(true)
 //! })
 //! .await;
-//!
 //! # });
 //!```
 //!
 //! ### Sending Events
 //!
-//! The [`Listener`] can also be used to send events to the Ring API, such as arming or disarming an alarm
+//! The [`location::Listener`] can also be used to send events to the Ring API, such as arming or disarming an alarm
 //! system.
 //!
 //! ```no_run

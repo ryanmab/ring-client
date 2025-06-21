@@ -55,24 +55,35 @@ async fn test_listening_for_events_in_location() {
             .expect("Should be able to listen for events");
 
         // Wait for a few seconds to receive events from Ring
-        let _ = timeout(
+        let outcome = timeout(
             std::time::Duration::from_secs(30),
             listener.listen(|event, _, _| async {
                 let received_events = Arc::clone(&received_events);
 
                 let mut received_events = received_events.lock().await;
 
+                if !matches!(
+                    event.message,
+                    Message::SessionInfo(_) | Message::SubscriptionTopicsInfo(_)
+                ) {
+                    // We only expect two kinds of events when opening the listener - either a
+                    // subscription topics info event or a session info event.
+                    return Err("Received unexpected event type");
+                }
+
                 received_events.push(event);
 
                 if received_events.len() >= 2 {
                     // If we have received enough events, close the connection
-                    return false;
+                    return Ok(false);
                 }
 
-                true
+                Ok(true)
             }),
         )
         .await;
+
+        assert!(outcome.is_ok(), "Outcome of event listening should be Ok");
     }
 
     let events = received_events.lock().await;
