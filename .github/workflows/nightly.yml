@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron:  '7 7 * * *'
+    - cron: '7 7 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -38,6 +38,19 @@ jobs:
       - name: cargo test --doc
         run: cargo test --locked --all-features --doc
 
+      - uses: ryanmab/incident-io-alert@v0.1.0
+        if: failure()
+        with:
+          alert_source_id: ${{ secrets.ALERT_SOURCE_ID }}
+          alert_source_token: ${{ secrets.ALERT_SOURCE_TOKEN }}
+          title: "Ring Client repository: Nightly build failure"
+          status: firing
+          description: |
+            The nightly build for the Ring Client repository has failed.
+
+            This would indicate that there is an upcoming set of breaking changes to Rust, or 
+            other dependencies, which will require an update to the Ring Client library.
+
   update:
     runs-on: ubuntu-latest
     name: Test (beta / updated)
@@ -67,3 +80,16 @@ jobs:
         run: cargo test --locked --all-features --doc
         env:
           RUSTFLAGS: -D deprecated
+
+      - uses: ryanmab/incident-io-alert@v0.1.0
+        if: failure()
+        with:
+          alert_source_id: ${{ secrets.ALERT_SOURCE_ID }}
+          alert_source_token: ${{ secrets.ALERT_SOURCE_TOKEN }}
+          title: "Ring Client repository: Nightly build failure"
+          status: firing
+          description: |
+            The nightly build for the Ring Client repository has failed.
+
+            This would indicate that there is an upcoming set of breaking changes to Rust, or 
+            other dependencies, which will require an update to the Ring Client library.
