@@ -19,7 +19,7 @@ jobs:
     name: Lint
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install stable
         uses: dtolnay/rust-toolchain@stable
@@ -44,7 +44,7 @@ jobs:
         toolchain: [ stable, beta ]
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install ${{ matrix.toolchain }}
         uses: dtolnay/rust-toolchain@master
@@ -68,7 +68,7 @@ jobs:
         msrv: [ "1.81.0" ]
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install ${{ matrix.msrv }}
         uses: dtolnay/rust-toolchain@master
@@ -83,7 +83,7 @@ jobs:
     name: Docs (nightly)
     needs: [ lint ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install nightly
         uses: dtolnay/rust-toolchain@nightly
@@ -117,7 +117,7 @@ jobs:
         toolchain: [ stable, beta ]
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install ${{ matrix.toolchain }}
         uses: dtolnay/rust-toolchain@master
@@ -143,7 +143,7 @@ jobs:
     name: Test (minimal versions)
     needs: [ clippy, msrv, docs ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install stable
         uses: dtolnay/rust-toolchain@stable
@@ -172,7 +172,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ clippy, msrv, docs ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install nightly
         uses: dtolnay/rust-toolchain@nightly
@@ -222,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install stable
         uses: dtolnay/rust-toolchain@stable
