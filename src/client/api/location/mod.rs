@@ -53,6 +53,11 @@ pub enum GeoServiceVerified {
     Unverified,
     #[serde(rename = "address_coordinates")]
     AddressCoordinates,
+#[serde(rename_all = "snake_case")]
+pub enum GeoServiceVerified {
+    Verified,
+    Unverified,
+    AddressCoordinates,
 }
 
 /// Data about a location in a Ring account.
