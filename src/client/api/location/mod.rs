@@ -51,6 +51,7 @@ pub struct GeoCoordinates {
 pub enum GeoServiceVerified {
     Verified,
     Unverified,
+    AddressCoordinates(String, String),
 }
 
 /// Data about a location in a Ring account.
