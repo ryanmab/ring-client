@@ -51,7 +51,8 @@ pub struct GeoCoordinates {
 pub enum GeoServiceVerified {
     Verified,
     Unverified,
-    AddressCoordinates(String, String),
+    #[serde(rename = "address_coordinates")]
+    AddressCoordinates,
 }
 
 /// Data about a location in a Ring account.
