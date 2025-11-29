@@ -48,11 +48,6 @@ pub struct GeoCoordinates {
 #[allow(missing_docs)]
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "lowercase")]
-pub enum GeoServiceVerified {
-    Verified,
-    Unverified,
-    #[serde(rename = "address_coordinates")]
-    AddressCoordinates,
 #[serde(rename_all = "snake_case")]
 pub enum GeoServiceVerified {
     Verified,
