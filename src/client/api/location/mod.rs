@@ -47,10 +47,11 @@ pub struct GeoCoordinates {
 
 #[allow(missing_docs)]
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "lowercase")]
+#[serde(rename_all = "snake_case")]
 pub enum GeoServiceVerified {
     Verified,
     Unverified,
+    AddressCoordinates,
 }
 
 /// Data about a location in a Ring account.
