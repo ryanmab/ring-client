@@ -73,7 +73,7 @@ pub struct LocationData {
     pub geo_service_verified: GeoServiceVerified,
 
     /// Whether the location is a job site.
-    pub is_jobsite: bool,
+    pub is_jobsite: Option<bool>,
 
     /// Whether the location is being shared from a different account.
     pub is_owner: bool,
