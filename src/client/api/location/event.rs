@@ -1,17 +1,17 @@
 use crate::helper::url::Url;
 use crate::location::Location;
-use crate::{helper, ApiError};
+use crate::{ApiError, helper};
 use futures_util::stream::SplitStream;
-use futures_util::{stream::SplitSink, SinkExt, StreamExt};
+use futures_util::{SinkExt, StreamExt, stream::SplitSink};
 use serde::{Deserialize, Serialize};
 use std::cmp::PartialEq;
 use std::future::Future;
 use std::sync::Arc;
 use tokio::net::TcpStream;
 use tokio::sync::Mutex;
-use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::tungstenite::Utf8Bytes;
-use tokio_tungstenite::{connect_async, tungstenite, MaybeTlsStream, WebSocketStream};
+use tokio_tungstenite::tungstenite::client::IntoClientRequest;
+use tokio_tungstenite::{MaybeTlsStream, WebSocketStream, connect_async, tungstenite};
 
 /// A real-time event which occured in a Location.
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]

@@ -1,6 +1,6 @@
-use crate::client::api::device::Device;
-use crate::client::api::ApiError;
 use crate::Client;
+use crate::client::api::ApiError;
+use crate::client::api::device::Device;
 
 impl Client {
     /// Retrieve a list of devices in the Ring account.

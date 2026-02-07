@@ -6,8 +6,8 @@ license = "MIT"
 description = "A Rust client for interfacing with Ring home security devices."
 keywords = ["home-security", "smart-home", "home-automation", "client", "ring"]
 categories = ["api-bindings"]
-edition = "2021"
-rust-version = "1.81.0"
+edition = "2024"
+rust-version = "1.85.0"
 readme = "README.md"
 
 homepage = "https://ryanmaber.com"

@@ -1,6 +1,6 @@
+use crate::Client;
 use crate::client::api;
 use crate::client::location::Location;
-use crate::Client;
 
 impl Client {
     /// Retrieve a list of locations in the Ring account.
