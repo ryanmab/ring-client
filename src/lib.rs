@@ -15,7 +15,7 @@
 //! ## Usage
 //! ```toml
 //! [dependencies]
-//! ring-client = "0.1.2"
+//! ring-client = "0.1.3"
 //! ```
 //!
 //! ## Capabilities
