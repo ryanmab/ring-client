@@ -3,7 +3,7 @@ mod error;
 pub use error::AuthenticationError;
 
 use crate::helper::url::Url;
-use crate::{helper, Client};
+use crate::{Client, helper};
 use chrono::{DateTime, Utc};
 use reqwest::StatusCode;
 use serde::Serialize;

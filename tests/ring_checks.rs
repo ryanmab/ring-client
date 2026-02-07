@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use dotenvy_macro::dotenv;
 use ring_client::location::Message;
-use ring_client::{authentication::Credentials, Client, OperatingSystem};
+use ring_client::{Client, OperatingSystem, authentication::Credentials};
 use tokio::{sync::Mutex, time::timeout};
 
 #[tokio::test]
