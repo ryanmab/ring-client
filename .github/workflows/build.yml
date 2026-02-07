@@ -189,9 +189,13 @@ jobs:
           file_name: .env
           fail_on_empty: false
 
-      - run: cargo +nightly llvm-cov --locked --all-features --lcov --output-path lcov_unit.info
+      - run: cargo +nightly llvm-cov --locked --branch --all-features --lcov --output-path lcov_unit.info
 
-      - run: cargo +nightly llvm-cov --locked --doc --all-features --lcov --output-path lcov_docs.info
+      - run: cargo +nightly llvm-cov --locked --branch --doc --all-features --lcov --output-path lcov_docs.info
+        # cargo-llvm-cov v0.7.0 introduced validation which means collecting coverage when no tests are executed
+        # triggers an error. In practice there isn't (currently) any doctests to collect from, so continue here if
+        # theres an error (there are plenty of other CI jobs which check the outcome of tests)
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v6
         with:
@@ -213,7 +217,6 @@ jobs:
             lcov_docs.info
           tag: doc-tests
         continue-on-error: true
-
 
   publish:
     name: Publish Crate
