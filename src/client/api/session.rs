@@ -1,10 +1,10 @@
-use crate::client::api::error::ApiError;
 use crate::client::api::RingApi;
+use crate::client::api::error::ApiError;
 use crate::client::authentication::Tokens;
 use crate::helper::url::Url;
 use crate::{constant, helper};
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::HashMap;
 
 /// The profile data for the logged in user.

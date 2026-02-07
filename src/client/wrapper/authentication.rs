@@ -2,9 +2,9 @@ use std::sync::Arc;
 
 use chrono::DateTime;
 
+use crate::Client;
 use crate::authentication::{AuthenticationError, Credentials};
 use crate::client::authentication::Tokens;
-use crate::Client;
 
 impl Client {
     /// Login to Ring using a set of credentials.
@@ -81,7 +81,7 @@ impl Client {
                     self.auth.login(username, password, &self.system_id).await?,
                 ));
             }
-            Credentials::RefreshToken(ref refresh_token) => {
+            &mut Credentials::RefreshToken(ref refresh_token) => {
                 self.tokens.write().await.replace(Arc::new(
                     self.auth
                         .refresh_tokens(Arc::new(Tokens::new(

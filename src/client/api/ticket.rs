@@ -1,8 +1,8 @@
-use crate::client::api::error::ApiError;
 use crate::client::api::RingApi;
+use crate::client::api::error::ApiError;
 use crate::client::authentication::Tokens;
 use crate::helper::url::Url;
-use crate::{helper, Client};
+use crate::{Client, helper};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

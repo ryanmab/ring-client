@@ -1,5 +1,5 @@
-use crate::client::api::error::ApiError;
 use crate::client::api::RingApi;
+use crate::client::api::error::ApiError;
 use crate::client::authentication::Tokens;
 use crate::helper;
 use crate::helper::url::Url;
