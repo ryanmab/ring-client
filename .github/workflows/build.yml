@@ -197,7 +197,7 @@ jobs:
         # theres an error (there are plenty of other CI jobs which check the outcome of tests)
         continue-on-error: true
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: coverage
           path: lcov_*.info
