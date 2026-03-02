@@ -30,5 +30,5 @@ rand = "0.9.1"
 rand_seeder = "0.4.0"
 
 [dev-dependencies]
-tokio-test = "0.4.4"
+tokio-test = "0.4.5"
 dotenvy_macro = "0.15.7"
