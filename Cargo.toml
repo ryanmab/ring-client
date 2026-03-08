@@ -24,7 +24,7 @@ thiserror = "2.0.18"
 tokio = { version = "1.50.0", features = ["macros", "test-util", "tokio-macros"] }
 tokio-tungstenite = { version = "0.28.0", features = ["native-tls"] }
 futures-util = "0.3.32"
-chrono = { version = "0.4.40", features = ["serde"] }
+chrono = { version = "0.4.44", features = ["serde"] }
 log = "0.4.26"
 sha2 = "0.10.9"
 base64 = "0.22.1"
