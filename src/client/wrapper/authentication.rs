@@ -87,12 +87,12 @@ impl Client {
                         .refresh_tokens(Arc::new(Tokens::new(
                             String::new(),
                             DateTime::default(),
-                            refresh_token.to_string(),
+                            refresh_token.clone(),
                         )))
                         .await?,
                 ));
             }
-        };
+        }
 
         self.api
             .set_session(
@@ -146,7 +146,7 @@ impl Client {
     /// same token.
     pub async fn get_refresh_token(&self) -> Option<String> {
         if let Some(refresh_token) = self.tokens.read().await.as_ref() {
-            return Some(refresh_token.refresh_token.to_string());
+            return Some(refresh_token.refresh_token.clone());
         }
 
         None

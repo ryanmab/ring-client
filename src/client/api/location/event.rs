@@ -96,17 +96,17 @@ impl Connection {
                         .map_err(ApiError::InvalidResponse);
 
                     if let Err(error) = event {
-                        log::error!("Error deserializing message: {:?}", error);
+                        log::error!("Error deserializing message: {error:?}");
 
                         return Some(Err(error));
                     }
 
-                    log::debug!("Received event: {:?}", event);
+                    log::debug!("Received event: {event:?}");
 
                     return Some(event);
                 }
                 Err(error) => {
-                    log::error!("Error receiving message: {:?}", error);
+                    log::error!("Error receiving message: {error:?}");
 
                     return Some(Err(ApiError::WebsocketError(error)));
                 }
@@ -137,7 +137,7 @@ impl Connection {
                 let closed = stream.close(None).await;
 
                 if let Err(error) = closed {
-                    log::error!("Error closing stream: {:?}", error);
+                    log::error!("Error closing stream: {error:?}");
                     return;
                 }
 
@@ -250,7 +250,7 @@ impl<'a> Listener<'a> {
                         continue;
                     }
 
-                    log::debug!("Received event: {:?}", event);
+                    log::debug!("Received event: {event:?}");
 
                     let outcome = on_event(event, self.location, Arc::clone(&connection)).await?;
 
@@ -260,7 +260,7 @@ impl<'a> Listener<'a> {
                     }
                 }
                 Some(Err(error)) => {
-                    log::error!("Error receiving event: {:?}", error);
+                    log::error!("Error receiving event: {error:?}");
                 }
                 None => {
                     log::info!("Websocket stream closed, stopping listener");
