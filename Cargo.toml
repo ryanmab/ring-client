@@ -26,7 +26,7 @@ tokio-tungstenite = { version = "0.29.0", features = ["native-tls"] }
 futures-util = "0.3.32"
 chrono = { version = "0.4.44", features = ["serde"] }
 log = "0.4.29"
-sha2 = "0.10.9"
+sha2 = "0.11.0"
 base64 = "0.22.1"
 
 [dev-dependencies]
